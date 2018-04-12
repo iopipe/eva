@@ -1,7 +1,7 @@
 package main
 
 import (
-  "requestlol-cli/cmds"
+  "eventally/cmds"
 )
 
 func main() {
