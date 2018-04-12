@@ -1,9 +1,9 @@
 package main
 
 import (
-  "eventally/cmds"
+	"eventally/cmds"
 )
 
 func main() {
-  cmds.Execute()
+	cmds.Execute()
 }
