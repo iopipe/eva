@@ -1,7 +1,7 @@
 package main
 
 import (
-	"eventally/cmds"
+	"eva/cmds"
 )
 
 func main() {
