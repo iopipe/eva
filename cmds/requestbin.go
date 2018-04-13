@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
+var cmdGetUrl = &cobra.Command{
 	Use:   "geturl",
 	Short: "Return a URL to send HTTP(S) request to.",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -21,12 +20,4 @@ var rootCmd = &cobra.Command{
 			}
 		}
 	},
-}
-
-func Execute() {
-	rootCmd.AddCommand(makeEvent)
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
 }
