@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/iopipe/eva/cmds"
+	"github.com/iopipe/eva/cmd"
 )
 
 func main() {
-	cmds.Execute()
+	cmd.Execute()
 }
