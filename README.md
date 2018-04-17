@@ -10,6 +10,7 @@ Usage:
 
 Available Commands:
   generate    A brief description of your command
+    -- cloudfront [-H host] [-a Auth] [-p path]
   geturl      Return a URL to send HTTP(S) request to.
   help        Help about any command
   listen      Listen on HTTP for events.
