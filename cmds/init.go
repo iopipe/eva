@@ -10,14 +10,13 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "usage",
 	Short: "Usage",
-	Run: func(cmd *cobra.Command, args []string) { },
+	Run:   func(cmd *cobra.Command, args []string) {},
 }
 
 func Execute() {
-  initMakeEvent()
-  initHTTPListener()
+	initMakeEvent()
+	initHTTPListener()
 	rootCmd.AddCommand(cmdGetUrl)
-	rootCmd.AddCommand(cmdMakeEvent)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

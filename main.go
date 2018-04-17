@@ -1,7 +1,7 @@
 package main
 
 import (
-	"eva/cmds"
+	"github.com/iopipe/eva/cmds"
 )
 
 func main() {
