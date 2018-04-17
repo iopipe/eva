@@ -61,9 +61,9 @@ func init() {
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	initMakeEvent()
-	initHTTPListener()
-	rootCmd.AddCommand(cmdGetUrl)
+	//initMakeEvent()
+	//initHTTPListener()
+	//rootCmd.AddCommand(cmdGetUrl)
 }
 
 // initConfig reads in config file and ENV variables if set.

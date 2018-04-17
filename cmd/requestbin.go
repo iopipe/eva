@@ -21,3 +21,7 @@ var cmdGetUrl = &cobra.Command{
 		}
 	},
 }
+
+func init() {
+	rootCmd.AddCommand(cmdGetUrl)
+}

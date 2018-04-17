@@ -18,7 +18,7 @@ var cmdListenHTTP = &cobra.Command{
 	},
 }
 
-func initHTTPListener() {
+func init() {
 	cmdListenHTTP.Flags().StringVarP(&cmdFlagHTTPListenerAddress, "addr", "a", ":8080", "HTTP(s) address to listen on.")
 
 	rootCmd.AddCommand(cmdListenHTTP)
