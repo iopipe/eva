@@ -18,7 +18,7 @@ func CreateCloudfrontEvent(request *http.Request) {
 					"request": map[string]interface{}{
 						"clientIp": "2001:0db8:85a3:0:0:8a2e:0370:7334",
 						"method":   request.Method,
-						"uri":      request.URL,
+						"uri":      request.URL.Path,
 						"body":     request.Body,
 						/*"headers": map[string]interface{}{
 							"authorization": []interface{}{
