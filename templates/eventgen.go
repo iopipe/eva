@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 )
 
-func CreateCloudfrontEvent(host, uri, authorization string) {
+func CreateCloudfrontEvent(request *http.Request) {
 	data := map[string]interface{}{
 		"Records": []interface{}{
 			map[string]interface{}{
@@ -16,9 +17,10 @@ func CreateCloudfrontEvent(host, uri, authorization string) {
 					},
 					"request": map[string]interface{}{
 						"clientIp": "2001:0db8:85a3:0:0:8a2e:0370:7334",
-						"method":   "GET",
-						"uri":      uri,
-						"headers": map[string]interface{}{
+						"method":   request.Method,
+						"uri":      request.URL,
+						"body":     request.Body,
+						/*"headers": map[string]interface{}{
 							"authorization": []interface{}{
 								map[string]interface{}{
 									"key":   "Authorization",
@@ -28,7 +30,7 @@ func CreateCloudfrontEvent(host, uri, authorization string) {
 							"host": []interface{}{
 								map[string]interface{}{
 									"key":   "Host",
-									"value": host,
+									"value": ,
 								},
 							},
 							"user-agent": []interface{}{
@@ -37,7 +39,7 @@ func CreateCloudfrontEvent(host, uri, authorization string) {
 									"value": "curl/7.51.0",
 								},
 							},
-						},
+						},*/
 					},
 				},
 			},

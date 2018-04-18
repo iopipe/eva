@@ -3,6 +3,8 @@ package cmd
 import (
 	"github.com/iopipe/eva/templates"
 	"github.com/spf13/cobra"
+	"net/http"
+	"net/url"
 )
 
 var cmdFlagMakeEventHost string
@@ -13,7 +15,13 @@ var cloudfrontCmd = &cobra.Command{
 	Use:   "cloudfront",
 	Short: "Generate a cloudfront event.",
 	Run: func(cmd *cobra.Command, args []string) {
-		templates.CreateCloudfrontEvent(cmdFlagMakeEventHost, cmdFlagMakeEventUri, cmdFlagMakeEventAuthorization)
+		request := &http.Request{
+			Method: "GET",
+			URL: &url.URL{
+				Path: cmdFlagMakeEventUri,
+			},
+		}
+		templates.CreateCloudfrontEvent(request)
 	},
 }
 
