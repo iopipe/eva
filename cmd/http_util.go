@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
-	//"net/url"
 )
 
 var cmdFlagHttpMethod string
@@ -14,11 +13,6 @@ var cmdFlagHttpUri string
 var cmdFlagHttpAuthorization string
 
 func CliParseHTTP(cmd *cobra.Command, args []string) (*http.Request, error) {
-	/*url, err := url.Parse(args[0])
-	  if err != nil {
-	    return nil, err
-	  }*/
-	/* func NewRequest(method, url string, body io.Reader) (*Request, error) */
 	body := strings.NewReader("Hello world")
 	request := httptest.NewRequest(cmdFlagHttpMethod, args[0], body)
 	request.Header.Add("Host", request.Host)
