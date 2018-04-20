@@ -1,11 +1,14 @@
 package cmd
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 
 	"github.com/spf13/cobra"
+
+	"github.com/iopipe/eva/templates"
 )
 
 var cmdFlagHTTPListenerAddress string
@@ -26,6 +29,9 @@ func init() {
 
 func HTTPHandler(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "hello, world!\n")
+
+	lambdaEvent := templates.CreateCloudfrontEvent(req)
+	fmt.Println(lambdaEvent)
 }
 
 func spawnHTTPListener(address string) {

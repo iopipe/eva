@@ -1,6 +1,7 @@
 package cmd
 
 import (
+  "fmt"
 	"github.com/iopipe/eva/templates"
 	"github.com/spf13/cobra"
 	"net/http"
@@ -21,7 +22,8 @@ var cloudfrontCmd = &cobra.Command{
 				Path: cmdFlagMakeEventUri,
 			},
 		}
-		templates.CreateCloudfrontEvent(request)
+		result := templates.CreateCloudfrontEvent(request)
+    fmt.Println(result)
 	},
 }
 

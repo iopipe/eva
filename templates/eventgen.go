@@ -2,13 +2,12 @@ package templates
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
 )
 
-func CreateCloudfrontEvent(request *http.Request) {
+func CreateCloudfrontEvent(request *http.Request) string {
 	headersMap := make(map[string]interface{})
 
 	for headerName, headerValues := range request.Header {
@@ -46,5 +45,5 @@ func CreateCloudfrontEvent(request *http.Request) {
 		log.Fatal(err)
 	}
 
-	fmt.Println(string(json))
+	return string(json)
 }
