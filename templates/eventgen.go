@@ -15,7 +15,7 @@ func CreateCloudfrontEvent(request *http.Request) {
 		headerNameLC := strings.ToLower(headerName)
 		headersMap[headerNameLC] = make([]map[string]interface{}, 1)
 		for headerValue := range headerValues {
-			headersMap[headerNameLC] = append([]map[string]interface{}(headersMap[headerNameLC].([]map[string]interface{}))[:],
+			headersMap[headerNameLC] = append(headersMap[headerNameLC].([]map[string]interface{}),
 				map[string]interface{}{
 					"key":   headerName,
 					"value": headerValue,
