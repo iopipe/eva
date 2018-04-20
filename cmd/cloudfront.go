@@ -1,7 +1,7 @@
 package cmd
 
 import (
-  "fmt"
+	"fmt"
 	"github.com/iopipe/eva/templates"
 	"github.com/spf13/cobra"
 	"net/http"
@@ -23,7 +23,7 @@ var cloudfrontCmd = &cobra.Command{
 			},
 		}
 		result := templates.CreateCloudfrontEvent(request)
-    fmt.Println(result)
+		fmt.Println(result)
 	},
 }
 

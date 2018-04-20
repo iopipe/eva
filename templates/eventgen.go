@@ -47,3 +47,28 @@ func CreateCloudfrontEvent(request *http.Request) string {
 
 	return string(json)
 }
+
+func CreateApiGwEvent(request *http.Request) string {
+	headersMap := make(map[string]interface{})
+
+	/* API Gateway doesn't handle duplicate headers...
+	   TODO: lookup behavior of API Gateway (which overrides, first or last?) */
+	for headerName, headerValues := range request.Header {
+		for headerIndex := range headerValues {
+			headersMap[headerName] = headerValues[headerIndex]
+		}
+	}
+
+	data := map[string]interface{}{
+		"path":       request.URL.Path,
+		"httpMethod": request.Method,
+		"body":       request.Body,
+		"headers":    headersMap,
+	}
+	json, err := json.MarshalIndent(data, " ", " ")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return string(json)
+}
