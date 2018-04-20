@@ -8,29 +8,37 @@ import (
 	"net/url"
 )
 
-var cmdFlagMakeAPIGwEventHost string
-var cmdFlagMakeAPIGwEventUri string
-var cmdFlagMakeAPIGwEventAuthorization string
+var cmdFlagHttpHost string
+var cmdFlagHttpUri string
+var cmdFlagHttpAuthorization string
+
+func CliParseHTTP(cmd *cobra.Command, args []string) *http.Request {
+  request := &http.Request{
+    Method: "GET",
+    URL: &url.URL{
+      Path: cmdFlagHttpUri,
+    },
+  }
+  return request
+}
 
 var apigwCmd = &cobra.Command{
 	Use:   "apigw",
 	Short: "Generate an API Gw event.",
-	Run: func(cmd *cobra.Command, args []string) {
-		request := &http.Request{
-			Method: "GET",
-			URL: &url.URL{
-				Path: cmdFlagMakeAPIGwEventUri,
-			},
-		}
-		result := templates.CreateApiGwEvent(request)
-		fmt.Println(result)
-	},
+	Run: func (cmd *cobra.Command, args []string) {
+   request := CliParseHTTP(cmd, args)
+   result := templates.CreateApiGwEvent(request)
+   fmt.Println(result)
+  },
+}
+
+func SetHttpCobraFlags (command *cobra.Command) {
+	command.Flags().StringVarP(&cmdFlagHttpHost, "host", "H", "", "HTTP(s) host for event data.")
+	command.Flags().StringVarP(&cmdFlagHttpUri, "path", "p", "", "HTTP(s) path or uri.")
+	command.Flags().StringVarP(&cmdFlagHttpAuthorization, "auth", "A", "", "Authorization header")
 }
 
 func init() {
-	apigwCmd.Flags().StringVarP(&cmdFlagMakeAPIGwEventHost, "host", "H", "", "HTTP(s) host for event data.")
-	apigwCmd.Flags().StringVarP(&cmdFlagMakeAPIGwEventUri, "path", "p", "", "HTTP(s) path or uri.")
-	apigwCmd.Flags().StringVarP(&cmdFlagMakeAPIGwEventAuthorization, "auth", "A", "", "Authorization header")
-
+  SetHttpCobraFlags(apigwCmd)
 	generateCmd.AddCommand(apigwCmd)
 }
