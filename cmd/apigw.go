@@ -9,8 +9,9 @@ import (
 var apigwCmd = &cobra.Command{
 	Use:   "apigw",
 	Short: "Generate an API Gw event.",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		request := CliParseHTTP(cmd, args)
+		request, _ := CliParseHTTP(cmd, args)
 		result := templates.CreateApiGwEvent(request)
 		fmt.Println(result)
 	},
