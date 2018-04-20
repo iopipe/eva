@@ -28,7 +28,7 @@ var cloudfrontCmd = &cobra.Command{
 func init() {
 	cloudfrontCmd.Flags().StringVarP(&cmdFlagMakeEventHost, "host", "H", "", "HTTP(s) host for event data.")
 	cloudfrontCmd.Flags().StringVarP(&cmdFlagMakeEventUri, "path", "p", "", "HTTP(s) path or uri.")
-	cloudfrontCmd.Flags().StringVarP(&cmdFlagMakeEventAuthorization, "auth", "u", "", "Authorization header")
+	cloudfrontCmd.Flags().StringVarP(&cmdFlagMakeEventAuthorization, "auth", "A", "", "Authorization header")
 
 	generateCmd.AddCommand(cloudfrontCmd)
 }
