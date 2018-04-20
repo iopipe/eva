@@ -9,11 +9,14 @@ Usage:
   eva [command]
 
 Available Commands:
-  generate    A brief description of your command
-    -- cloudfront [-H host] [-a Auth] [-p path]
+  generate    generate events for serverless functions.
+   - cloudfront
+   - apigw
   geturl      Return a URL to send HTTP(S) request to.
   help        Help about any command
   listen      Listen on HTTP for events.
+   - cloudfront
+   - apigw
 
 Flags:
       --config string   config file (default is $HOME/.eva.yaml)
