@@ -5,9 +5,24 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func CreateCloudfrontEvent(request *http.Request) {
+	headersMap := make(map[string]interface{})
+
+	for headerName, headerValues := range request.Header {
+		headerNameLC := strings.ToLower(headerName)
+		headersMap[headerNameLC] = make([]map[string]interface{}, 1)
+		for headerValue := range headerValues {
+			headersMap[headerNameLC] = append([]map[string]interface{}(headersMap[headerNameLC].([]map[string]interface{}))[:],
+				map[string]interface{}{
+					"key":   headerName,
+					"value": headerValue,
+				},
+			)
+		}
+	}
 	data := map[string]interface{}{
 		"Records": []interface{}{
 			map[string]interface{}{
@@ -20,26 +35,7 @@ func CreateCloudfrontEvent(request *http.Request) {
 						"method":   request.Method,
 						"uri":      request.URL.Path,
 						"body":     request.Body,
-						/*"headers": map[string]interface{}{
-							"authorization": []interface{}{
-								map[string]interface{}{
-									"key":   "Authorization",
-									"value": authorization,
-								},
-							},
-							"host": []interface{}{
-								map[string]interface{}{
-									"key":   "Host",
-									"value": ,
-								},
-							},
-							"user-agent": []interface{}{
-								map[string]interface{}{
-									"key":   "User-Agent",
-									"value": "curl/7.51.0",
-								},
-							},
-						},*/
+						"headers":  headersMap,
 					},
 				},
 			},
