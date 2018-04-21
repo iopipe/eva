@@ -23,6 +23,12 @@ func CreateCloudfrontEvent(request *http.Request) string {
 			)
 		}
 	}
+
+	body, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	data := map[string]interface{}{
 		"Records": []interface{}{
 			map[string]interface{}{
@@ -34,7 +40,7 @@ func CreateCloudfrontEvent(request *http.Request) string {
 						"clientIp": "2001:0db8:85a3:0:0:8a2e:0370:7334",
 						"method":   request.Method,
 						"uri":      request.URL.Path,
-						"body":     request.Body,
+						"body":     string(body),
 						"headers":  headersMap,
 					},
 				},
