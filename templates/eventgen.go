@@ -2,6 +2,7 @@ package templates
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -59,10 +60,15 @@ func CreateApiGwEvent(request *http.Request) string {
 		}
 	}
 
+	body, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	data := map[string]interface{}{
 		"path":       request.URL.Path,
 		"httpMethod": request.Method,
-		"body":       request.Body,
+		"body":       string(body),
 		"headers":    headersMap,
 	}
 	json, err := json.MarshalIndent(data, " ", " ")
