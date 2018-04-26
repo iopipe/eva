@@ -32,6 +32,15 @@ func CliParseHTTP(cmd *cobra.Command, args []string) (*http.Request, error) {
 	}
 
 	request := httptest.NewRequest(cmdFlagHttpMethod, args[0], body)
+
+	/* CLI overrides */
+	if cmdFlagHttpHost != "" {
+		request.Host = cmdFlagHttpHost
+	}
+	if cmdFlagHttpUri != "" {
+		request.RequestURI = cmdFlagHttpUri
+		request.URL.Path = cmdFlagHttpUri
+	}
 	request.Header.Add("Host", request.Host)
 	return request, nil
 }
