@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+type TemplateHandler func(request *http.Request) string
+
 func CreateCloudfrontEvent(request *http.Request) string {
 	headersMap := make(map[string]interface{})
 
