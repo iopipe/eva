@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/satori/go.uuid"
 )
 
 type TemplateHandler func(request *http.Request) string
@@ -68,16 +70,46 @@ func CreateApiGwEvent(request *http.Request) string {
 		}
 	}
 
+	requestId, err := uuid.NewV4()
+	if err != nil {
+		panic(err)
+	}
+
+	contextMap := map[string]interface{}{
+		"accountId":  "123456789012",
+		"resourceId": "us4z18",
+		"stage":      "eva-generated",
+		"requestId":  requestId.String(),
+		"identity": map[string]interface{}{
+			"cognitoIdentityPoolId":         "",
+			"accountId":                     "",
+			"cognitoIdentityId":             "",
+			"caller":                        "",
+			"apiKey":                        "",
+			"sourceIp":                      "127.0.0.1",
+			"cognitoAuthenticationType":     "",
+			"cognitoAuthenticationProvider": "",
+			"userArn":                       "",
+			"userAgent":                     request.Header.Get("User-Agent"),
+			"user":                          "",
+		},
+		"resourcePath": "/",
+		"httpMethod":   request.Method,
+		"apiId":        "eva-fake-api",
+	}
+
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	data := map[string]interface{}{
-		"path":       request.URL.Path,
-		"httpMethod": request.Method,
-		"body":       string(body),
-		"headers":    headersMap,
+		"path":           request.URL.Path,
+		"httpMethod":     request.Method,
+		"body":           string(body),
+		"headers":        headersMap,
+		"requestContext": contextMap,
+		"resource":       "UNKNOWN",
 	}
 	json, err := json.MarshalIndent(data, " ", " ")
 	if err != nil {
