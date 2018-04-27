@@ -30,6 +30,7 @@ Available Commands:
   geturl      Return a URL to send HTTP(S) request to.
   help        Help about any command
   inspect     Inspect an event history record.
+  invocations Invocations list
   list        List generated events
   play        Play event specified by id
       -e, --exec string       Pipe events into specified shell command.
