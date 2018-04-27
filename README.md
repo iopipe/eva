@@ -20,6 +20,8 @@ Available Commands:
       -p, --path string     HTTP(s) path or uri.
   geturl      Return a URL to send HTTP(S) request to.
   help        Help about any command
+  inspect     Inspect an event history record.
+  list        List generated events
   listen      Listen on HTTP for events.
     cloudfront
     apigw
