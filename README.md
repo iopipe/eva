@@ -5,7 +5,6 @@ Experimental cli for API and client debugging.
 This package is NOT production ready!
 
 ```
-      -s, --response string   Save response JSON into file.
 Usage:
   eva [command]
 
