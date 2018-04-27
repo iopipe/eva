@@ -5,6 +5,7 @@ Experimental cli for API and client debugging.
 This package is NOT production ready!
 
 ```
+      -s, --response string   Save response JSON into file.
 Usage:
   eva [command]
 
@@ -30,6 +31,9 @@ Available Commands:
       -e, --exec string       Pipe events into specified shell command.
       -q, --request string    Save request JSON into file.
       -s, --response string   Save response JSON into file.
+  play        Play event specified by id
+      -e, --exec string       Pipe events into specified shell command.
+      -q, --request string    Save request JSON into file.
 Flags:
       --config string   config file (default is $HOME/.eva.yaml)
   -h, --help            help for eva
