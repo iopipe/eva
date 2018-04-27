@@ -9,6 +9,15 @@ Usage:
   eva [command]
 
 Available Commands:
+  daemon      Run HTTP daemon for listening to events.
+    apigw
+    cloudfront
+    invocations
+      -a, --addr string       HTTP(s) address to listen on. (default ":8080")
+          --config string     config file (default is $HOME/.eva.yaml)
+      -e, --exec string       Pipe events into specified shell command.
+      -q, --request string    Save request JSON into file.
+      -s, --response string   Save response JSON into file.
   generate    generate events for serverless functions.
     cloudfront
     apigw
@@ -22,15 +31,6 @@ Available Commands:
   help        Help about any command
   inspect     Inspect an event history record.
   list        List generated events
-  listen      Listen on HTTP for events.
-    apigw
-    cloudfront
-    invocations
-      -a, --addr string       HTTP(s) address to listen on. (default ":8080")
-          --config string     config file (default is $HOME/.eva.yaml)
-      -e, --exec string       Pipe events into specified shell command.
-      -q, --request string    Save request JSON into file.
-      -s, --response string   Save response JSON into file.
   play        Play event specified by id
       -e, --exec string       Pipe events into specified shell command.
       -q, --request string    Save request JSON into file.
