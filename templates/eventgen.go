@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	db "github.com/iopipe/eva/data"
 	"github.com/satori/go.uuid"
 )
 
@@ -57,6 +58,7 @@ func HandleCloudfrontEvent(request *http.Request) string {
 		log.Fatal(err)
 	}
 
+	db.PutEvent(data)
 	return string(json)
 }
 
@@ -130,5 +132,6 @@ func HandleApiGwEvent(request *http.Request) string {
 		log.Fatal(err)
 	}
 
+	db.PutEvent(data)
 	return string(json)
 }

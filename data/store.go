@@ -1,14 +1,15 @@
 package data
 
 import (
+	"github.com/HouzuoGuo/tiedot/db"
+	"github.com/docker/docker/pkg/homedir"
+	"log"
 	"path/filepath"
-  "github.com/docker/docker/pkg/homedir"
-  "github.com/HouzuoGuo/tiedot/db"
-  "github.com/HouzuoGuo/tiedot/dberr"
+	//"github.com/HouzuoGuo/tiedot/dberr"
 )
 
-func Database () *Db {
-  dbPath := filepath.Join(homedir.Get(), ".eva", "data")
+func Database() *db.DB {
+	dbPath := filepath.Join(homedir.Get(), ".eva", "data")
 
 	// Open database (creates as necessary /w directories)
 	myDB, err := db.OpenDB(dbPath)
@@ -17,34 +18,40 @@ func Database () *Db {
 	}
 
 	/* Create all needed collections.
-     ignore errors as we want to idompotently
-     create these if they do not exist. */
+	   ignore errors as we want to idompotently
+	   create these if they do not exist. */
 	myDB.Create("events")
 	myDB.Create("responses")
 	myDB.Create("invocations")
 
-  return myDB
+	return myDB
+}
+
+func PutEvent(event map[string]interface{}) int {
+	myDB := Database()
+	defer myDB.Close()
+	events := myDB.Use("events")
+
+	docID, err := events.Insert(event)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return docID
+}
+
+func GetEvent(docID int) map[string]interface{} {
+	myDB := Database()
+	defer myDB.Close()
+	events := myDB.Use("events")
+
+	readBack, err := events.Read(docID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return readBack
 }
 
 /*
-	// Start using a collection (the reference is valid until DB schema changes or Scrub is carried out)
-	feeds := myDB.Use("Feeds")
-
-	// Insert document (afterwards the docID uniquely identifies the document and will never change)
-	docID, err := feeds.Insert(map[string]interface{}{
-		"name": "Go 1.2 is released",
-		"url":  "golang.org"})
-	if err != nil {
-		panic(err)
-	}
-
-	// Read document
-	readBack, err := feeds.Read(docID)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("Document", docID, "is", readBack)
-
 	// Update document
 	err = feeds.Update(docID, map[string]interface{}{
 		"name": "Go is very popular",
