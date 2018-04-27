@@ -51,6 +51,21 @@ func GetEvent(docID int) map[string]interface{} {
 	return readBack
 }
 
+func GetEvents() map[int]struct{} {
+	myDB := Database()
+	defer myDB.Close()
+	events := myDB.Use("events")
+
+	query := "all"
+	//map[string]interface{} { }
+
+	queryResult := make(map[int]struct{})
+	if err := db.EvalQuery(query, events, &queryResult); err != nil {
+		log.Fatal(err)
+	}
+	return queryResult
+}
+
 /*
 	// Update document
 	err = feeds.Update(docID, map[string]interface{}{
