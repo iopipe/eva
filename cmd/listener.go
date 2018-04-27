@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"os/exec"
@@ -16,6 +15,7 @@ import (
 var cmdFlagHTTPListenerAddress string
 var cmdFlagHTTPListenerPipeExec string
 var cmdFlagHTTPListenerPipeFile string
+var cmdFlagHTTPListenerResponseFile string
 
 var cmdListenHTTP = &cobra.Command{
 	Use:   "listen",
@@ -26,7 +26,7 @@ var cmdListenHTTPCloudfront = &cobra.Command{
 	Use:   "cloudfront",
 	Short: "Generate cloudfront requests from HTTP listener",
 	Run: func(cmd *cobra.Command, args []string) {
-		spawnHTTPListener(templates.CreateCloudfrontEvent, cmdFlagHTTPListenerAddress, cmdFlagHTTPListenerPipeExec, cmdFlagHTTPListenerPipeFile)
+		spawnHTTPListener(templates.HandleCloudfrontEvent, templates.HandleCloudfrontResponse, cmdFlagHTTPListenerAddress, cmdFlagHTTPListenerPipeExec, cmdFlagHTTPListenerPipeFile, cmdFlagHTTPListenerResponseFile)
 	},
 }
 
@@ -34,40 +34,46 @@ var cmdListenHTTPApiGw = &cobra.Command{
 	Use:   "apigw",
 	Short: "Generate apigw requests from HTTP listener",
 	Run: func(cmd *cobra.Command, args []string) {
-		spawnHTTPListener(templates.CreateApiGwEvent, cmdFlagHTTPListenerAddress, cmdFlagHTTPListenerPipeExec, cmdFlagHTTPListenerPipeFile)
+		spawnHTTPListener(templates.HandleApiGwEvent, templates.HandleApiGwResponse, cmdFlagHTTPListenerAddress, cmdFlagHTTPListenerPipeExec, cmdFlagHTTPListenerPipeFile, cmdFlagHTTPListenerResponseFile)
 	},
 }
 
 func init() {
 	cmdListenHTTP.PersistentFlags().StringVarP(&cmdFlagHTTPListenerAddress, "addr", "a", ":8080", "HTTP(s) address to listen on.")
 	cmdListenHTTP.PersistentFlags().StringVarP(&cmdFlagHTTPListenerPipeExec, "exec", "e", "", "Pipe events into specified shell command.")
-	cmdListenHTTP.PersistentFlags().StringVarP(&cmdFlagHTTPListenerPipeFile, "output", "o", "", "Pipe events into file.")
+	cmdListenHTTP.PersistentFlags().StringVarP(&cmdFlagHTTPListenerPipeFile, "request", "q", "", "Save request JSON into file.")
+	cmdListenHTTP.PersistentFlags().StringVarP(&cmdFlagHTTPListenerPipeFile, "response", "s", "", "Save response JSON into file.")
 
 	rootCmd.AddCommand(cmdListenHTTP)
 	cmdListenHTTP.AddCommand(cmdListenHTTPApiGw)
 	cmdListenHTTP.AddCommand(cmdListenHTTPCloudfront)
 }
 
-func HTTPHandlerFactory(templateHandler templates.TemplateHandler, pipeExec string, pipeFile string) http.HandlerFunc {
+func HTTPHandlerFactory(requestHandler templates.RequestHandler, responseHandler templates.ResponseHandler, pipeExec string, pipeFile string, responseFile string) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		lambdaEvent := templateHandler(req)
+		var responseEvent []byte = []byte("")
+		var err error
+		lambdaEvent := requestHandler(req)
 		if pipeFile == "-" {
 			fmt.Println(lambdaEvent)
 		}
 		if pipeExec != "" {
 			cmd := exec.Command("bash", "-c", pipeExec)
 			cmd.Stdin = strings.NewReader(lambdaEvent)
-			responseEvent, err := cmd.Output()
+			responseEvent, err = cmd.Output()
 			if err != nil {
-				panic(err)
+				log.Fatal("Error executing command.\nError: ", err)
 			}
-			io.WriteString(w, string(responseEvent))
 		}
+		if responseFile == "-" {
+			fmt.Println(responseEvent)
+		}
+		responseHandler(responseEvent, w)
 	}
 }
 
-func spawnHTTPListener(templateHandler templates.TemplateHandler, address string, pipeExec string, pipeFile string) {
-	handler := HTTPHandlerFactory(templateHandler, pipeExec, pipeFile)
+func spawnHTTPListener(requestHandler templates.RequestHandler, responseHandler templates.ResponseHandler, address string, pipeExec string, pipeFile string, responseFile string) {
+	handler := HTTPHandlerFactory(requestHandler, responseHandler, pipeExec, pipeFile, responseFile)
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe(address, nil))
 }

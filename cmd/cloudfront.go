@@ -12,7 +12,7 @@ var cloudfrontCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		request, _ := CliParseHTTP(cmd, args)
-		result := templates.CreateCloudfrontEvent(request)
+		result := templates.HandleCloudfrontEvent(request)
 		fmt.Println(result)
 	},
 }

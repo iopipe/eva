@@ -10,9 +10,10 @@ import (
 	"github.com/satori/go.uuid"
 )
 
-type TemplateHandler func(request *http.Request) string
+type RequestHandler func(request *http.Request) string
+type ResponseHandler func(response []byte, w http.ResponseWriter)
 
-func CreateCloudfrontEvent(request *http.Request) string {
+func HandleCloudfrontEvent(request *http.Request) string {
 	headersMap := make(map[string]interface{})
 
 	for headerName, headerValues := range request.Header {
@@ -59,7 +60,20 @@ func CreateCloudfrontEvent(request *http.Request) string {
 	return string(json)
 }
 
-func CreateApiGwEvent(request *http.Request) string {
+func HandleApiGwResponse(response []byte, w http.ResponseWriter) {
+	var object map[string]interface{}
+	err := json.Unmarshal(response, &object)
+	if err != nil {
+		log.Fatalf("JSON unmarshalling error.\nError: %s\nraw bytes: %s", err, response)
+	}
+	w.WriteHeader(int(object["statusCode"].(float64)))
+}
+
+func HandleCloudfrontResponse(request []byte, w http.ResponseWriter) {
+	w.WriteHeader(200)
+}
+
+func HandleApiGwEvent(request *http.Request) string {
 	headersMap := make(map[string]interface{})
 
 	/* API Gateway doesn't handle duplicate headers...
@@ -72,7 +86,7 @@ func CreateApiGwEvent(request *http.Request) string {
 
 	requestId, err := uuid.NewV4()
 	if err != nil {
-		panic(err)
+		log.Fatal("UUID generation error.")
 	}
 
 	contextMap := map[string]interface{}{

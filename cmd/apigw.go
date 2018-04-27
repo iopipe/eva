@@ -12,7 +12,7 @@ var apigwCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		request, _ := CliParseHTTP(cmd, args)
-		result := templates.CreateApiGwEvent(request)
+		result := templates.HandleApiGwEvent(request)
 		fmt.Println(result)
 	},
 }
