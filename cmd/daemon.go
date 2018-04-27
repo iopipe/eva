@@ -12,8 +12,8 @@ var cmdFlagHTTPListenerPipeFile string
 var cmdFlagHTTPListenerResponseFile string
 
 var cmdListenHTTP = &cobra.Command{
-	Use:   "listen",
-	Short: "Listen on HTTP for events.",
+	Use:   "daemon",
+	Short: "Run HTTP daemon for listening to events.",
 }
 
 var cmdListenHTTPCloudfront = &cobra.Command{
@@ -32,6 +32,14 @@ var cmdListenHTTPApiGw = &cobra.Command{
 	},
 }
 
+var cmdListenHTTPInvocation = &cobra.Command{
+	Use:   "invocations",
+	Short: "Consume invocation messages from IOpipe library",
+	Run: func(cmd *cobra.Command, args []string) {
+		listener.Listen(templates.HandleInvocationEvent, templates.HandleInvocationResponse, cmdFlagHTTPListenerAddress, cmdFlagHTTPListenerPipeExec, cmdFlagHTTPListenerPipeFile, cmdFlagHTTPListenerResponseFile)
+	},
+}
+
 func init() {
 	cmdListenHTTP.PersistentFlags().StringVarP(&cmdFlagHTTPListenerAddress, "addr", "a", ":8080", "HTTP(s) address to listen on.")
 	cmdListenHTTP.PersistentFlags().StringVarP(&cmdFlagHTTPListenerPipeExec, "exec", "e", "", "Pipe events into specified shell command.")
@@ -41,4 +49,5 @@ func init() {
 	rootCmd.AddCommand(cmdListenHTTP)
 	cmdListenHTTP.AddCommand(cmdListenHTTPApiGw)
 	cmdListenHTTP.AddCommand(cmdListenHTTPCloudfront)
+	cmdListenHTTP.AddCommand(cmdListenHTTPInvocation)
 }

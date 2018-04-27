@@ -26,6 +26,18 @@ func Database() *db.DB {
 	return myDB
 }
 
+func PutInvocation(invocation map[string]interface{}) int {
+	myDB := Database()
+	defer myDB.Close()
+	invocations := myDB.Use("invocations")
+
+	docID, err := invocations.Insert(invocation)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return docID
+}
+
 func PutEvent(event map[string]interface{}) int {
 	myDB := Database()
 	defer myDB.Close()
@@ -56,10 +68,21 @@ func GetEvents() map[int]struct{} {
 	events := myDB.Use("events")
 
 	query := "all"
-	//map[string]interface{} { }
-
 	queryResult := make(map[int]struct{})
 	if err := db.EvalQuery(query, events, &queryResult); err != nil {
+		log.Fatal(err)
+	}
+	return queryResult
+}
+
+func GetInvocations() map[int]struct{} {
+	myDB := Database()
+	defer myDB.Close()
+	invocations := myDB.Use("invocations")
+
+	query := "all"
+	queryResult := make(map[int]struct{})
+	if err := db.EvalQuery(query, invocations, &queryResult); err != nil {
 		log.Fatal(err)
 	}
 	return queryResult

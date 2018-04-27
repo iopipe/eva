@@ -3,8 +3,6 @@ package cmd
 import (
 	"encoding/json"
 	"log"
-	"net/http/httptest"
-	"os"
 	"strconv"
 
 	"github.com/spf13/cobra"

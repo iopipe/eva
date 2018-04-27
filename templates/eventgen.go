@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	db "github.com/iopipe/eva/data"
@@ -13,6 +14,21 @@ import (
 
 type RequestHandler func(request *http.Request) string
 type ResponseHandler func(response []byte, w http.ResponseWriter)
+
+func HandleInvocationEvent(request *http.Request) string {
+	body, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var object map[string]interface{}
+	err = json.Unmarshal(body, &object)
+	if (err != nil) {
+		os.Stderr.WriteString(err.Error())
+		os.Stderr.WriteString("\n")
+	}
+	db.PutInvocation(object)
+  return "{}"
+}
 
 func HandleCloudfrontEvent(request *http.Request) string {
 	headersMap := make(map[string]interface{})
@@ -60,6 +76,10 @@ func HandleCloudfrontEvent(request *http.Request) string {
 
 	db.PutEvent(data)
 	return string(json)
+}
+
+func HandleInvocationResponse(response []byte, w http.ResponseWriter) {
+  /* NoOp */
 }
 
 func HandleApiGwResponse(response []byte, w http.ResponseWriter) {

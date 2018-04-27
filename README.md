@@ -23,8 +23,9 @@ Available Commands:
   inspect     Inspect an event history record.
   list        List generated events
   listen      Listen on HTTP for events.
-    cloudfront
     apigw
+    cloudfront
+    invocations
       -a, --addr string       HTTP(s) address to listen on. (default ":8080")
           --config string     config file (default is $HOME/.eva.yaml)
       -e, --exec string       Pipe events into specified shell command.
