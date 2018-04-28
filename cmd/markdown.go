@@ -1,12 +1,7 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
-	"path"
-	"path/filepath"
-	"strings"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
@@ -20,17 +15,14 @@ var markdownCmd = &cobra.Command{
 		const fmTemplate = `---
 permalink: /
 ---
+
 `
 
 		filePrepender := func(filename string) string {
-			if filename != "docs/eva.md" {
-				return filename
+			if filename == "docs/eva.md" {
+				return fmTemplate
 			}
-			now := time.Now().Format(time.RFC3339)
-			name := filepath.Base(filename)
-			base := strings.TrimSuffix(name, path.Ext(name))
-			url := "/commands/" + strings.ToLower(base) + "/"
-			return fmt.Sprintf(fmTemplate, now, strings.Replace(base, "_", " ", -1), base, url)
+			return filename
 		}
 
 		err := doc.GenMarkdownTreeCustom(rootCmd, "./docs", filePrepender, func(s string) string { return s })

@@ -1,7 +1,8 @@
 ---
 permalink: /
 ---
-%!(EXTRA string=2018-04-28T04:04:02Z, string=eva, string=eva, string=/commands/eva/)## eva
+
+## eva
 
 Event Ally, a cli for managing serverless events
 
