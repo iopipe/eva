@@ -14,19 +14,37 @@ import (
 var inspectCmd = &cobra.Command{
 	Use:   "inspect",
 	Short: "Inspect an event history record.",
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		eventIdStr := args[0]
-		eventId, err := strconv.Atoi(eventIdStr)
-		if err != nil {
-			log.Fatal(err)
+		prefix := ""
+		if len(args) > 1 {
+			fmt.Println("[")
+			prefix = " "
 		}
-		event := db.GetEvent(eventId)
+		for arg := range args {
+			eventIdStr := args[arg]
+			eventId, err := strconv.Atoi(eventIdStr)
+			if err != nil {
+				log.Fatal(err)
+			}
+			event := db.GetEvent(eventId)
 
-		encoded, err := json.MarshalIndent(event, "", " ")
-		if err != nil {
-			log.Fatal(err)
+			encoded, err := json.MarshalIndent(event, prefix, " ")
+			if err != nil {
+				log.Fatal(err)
+			}
+			if len(args) > 1 {
+				fmt.Print(prefix)
+			}
+			fmt.Print(string(encoded))
+			if len(args)-1 != arg {
+				fmt.Print(",")
+			}
+			fmt.Print("\n")
 		}
-		fmt.Println(string(encoded))
+		if len(args) > 1 {
+			fmt.Println("]")
+		}
 	},
 }
 
