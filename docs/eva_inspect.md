@@ -1,4 +1,4 @@
-## eva inspect
+docs/eva_inspect.md## eva inspect
 
 Inspect an event history record.
 

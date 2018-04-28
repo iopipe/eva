@@ -1,4 +1,7 @@
-## eva
+---
+permalink: /
+---
+%!(EXTRA string=2018-04-28T03:31:14Z, string=eva, string=eva, string=/commands/eva/)## eva
 
 A brief description of your application
 
