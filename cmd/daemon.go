@@ -6,11 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cmdFlagHTTPListenerAddress string
-var cmdFlagHTTPListenerPipeExec string
-var cmdFlagHTTPListenerPipeFile string
-var cmdFlagHTTPListenerResponseFile string
-
 var cmdListenHTTP = &cobra.Command{
 	Use:   "daemon",
 	Short: "Run HTTP daemon for listening to events.",
@@ -41,10 +36,7 @@ var cmdListenHTTPInvocation = &cobra.Command{
 }
 
 func init() {
-	cmdListenHTTP.PersistentFlags().StringVarP(&cmdFlagHTTPListenerAddress, "addr", "a", ":8080", "HTTP(s) address to listen on.")
-	cmdListenHTTP.PersistentFlags().StringVarP(&cmdFlagHTTPListenerPipeExec, "exec", "e", "", "Pipe events into specified shell command.")
-	cmdListenHTTP.PersistentFlags().StringVarP(&cmdFlagHTTPListenerPipeFile, "request", "q", "", "Save request JSON into file.")
-	cmdListenHTTP.PersistentFlags().StringVarP(&cmdFlagHTTPListenerPipeFile, "response", "s", "", "Save response JSON into file.")
+	SetPlayFlags(cmdListenHTTP)
 
 	rootCmd.AddCommand(cmdListenHTTP)
 	cmdListenHTTP.AddCommand(cmdListenHTTPApiGw)

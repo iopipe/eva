@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 
 	db "github.com/iopipe/eva/data"
-	"github.com/iopipe/eva/listener"
+	"github.com/iopipe/eva/play"
 )
 
 // playCmd represents the play command
@@ -29,11 +29,11 @@ var playCmd = &cobra.Command{
 			if err != nil {
 				log.Fatal(err)
 			}
-			listener.HandleEvent(string(encoded), cmdFlagHTTPListenerPipeExec, cmdFlagHTTPListenerPipeFile, cmdFlagHTTPListenerResponseFile)
+			play.PlayEvent(string(encoded), cmdFlagHTTPListenerPipeExec, cmdFlagHTTPListenerPipeFile, cmdFlagHTTPListenerResponseFile)
 		}
 
 		/* convert into HTTP...
-		   responseEvent := listener.HandleEvent(...)
+		   responseEvent := listener.PlayEvent(...)
 		   w := httptest.NewRecorder()
 		   responseHandler(responseEvent, w)
 		   result := w.Result()
