@@ -19,7 +19,7 @@ BUILD_DIR_LINK=$(shell readlink ${BUILD_DIR})
 LDFLAGS = -ldflags "-X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.BRANCH=${BRANCH}"
 
 # Build the project
-all: link clean goget test vet linux darwin windows
+all: link clean goget test vet linux darwin windows docs
 
 link:
 	BUILD_DIR=${BUILD_DIR}; \
@@ -74,4 +74,8 @@ goget:
 	GOBIN= GOOS=darwin GOARCH=${GOARCH} go get ; \
 	GOBIN= GOOS=windows GOARCH=${GOARCH} go get ;
 
-.PHONY: link linux darwin windows test vet fmt clean goget
+docs: linux
+	cd ${BUILD_DIR} ; \
+	./eva-linux-${GOARCH} docs export markdown ;
+
+.PHONY: link linux darwin windows test vet fmt clean goget docs
