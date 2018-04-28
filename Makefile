@@ -21,6 +21,12 @@ LDFLAGS = -ldflags "-X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.
 # Build the project
 all: link clean goget test vet linux darwin windows docs
 
+build: link clean goget test vet docs
+	go build
+
+install: build
+	go install
+
 link:
 	BUILD_DIR=${BUILD_DIR}; \
 	BUILD_DIR_LINK=${BUILD_DIR_LINK}; \
