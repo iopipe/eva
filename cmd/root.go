@@ -1,17 +1,3 @@
-// Copyright © 2018 NAME HERE <EMAIL ADDRESS>
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package cmd
 
 import (
@@ -28,16 +14,23 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "eva",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "Event Ally, a cli for managing serverless events",
+	Long: `Eva is a CLI application that enables developers
+to work with events to store, replay, deliver,
+and proxy. It is designed to work with event-driven
+serverless systems.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+Eva can generate events:
+  `+"`"+`eva generate <event-type>`+"`"+`,
+Consume and dispatch events as a daemon:
+  `+"`"+`eva daemon <event-type>`+"`"+`,
+Replay events and redispatch:
+  `+"`"+`eva play <event-id>`+"`"+`,
+Store invocation data for serverless functions:
+  `+"`"+`eva invocations`+"`"+`,
+and is your serverless event ally brought to you with <3
+
+Read documentation online at https://iopipe.github.io/eva/`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

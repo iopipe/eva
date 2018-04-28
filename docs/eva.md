@@ -1,18 +1,28 @@
 ---
 permalink: /
 ---
-%!(EXTRA string=2018-04-28T03:31:14Z, string=eva, string=eva, string=/commands/eva/)## eva
+%!(EXTRA string=2018-04-28T04:03:26Z, string=eva, string=eva, string=/commands/eva/)## eva
 
-A brief description of your application
+Event Ally, a cli for managing serverless events
 
 ### Synopsis
 
-A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+Eva is a CLI application that enables developers
+to work with events to store, replay, deliver,
+and proxy. It is designed to work with event-driven
+serverless systems.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.
+Eva can generate events:
+  `eva generate <event-type>`,
+Consume and dispatch events as a daemon:
+  `eva daemon <event-type>`,
+Replay events and redispatch:
+  `eva play <event-id>`,
+Store invocation data for serverless functions:
+  `eva invocations`,
+and is your serverless event ally brought to you with <3
+
+Read documentation online at https://iopipe.github.io/eva/
 
 ### Options
 

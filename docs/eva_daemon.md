@@ -24,7 +24,7 @@ Run HTTP daemon for listening to events.
 
 ### SEE ALSO
 
-* [eva](eva.md)	 - A brief description of your application
+* [eva](eva.md)	 - Event Ally, a cli for managing serverless events
 * [eva daemon apigw](eva_daemon_apigw.md)	 - Generate apigw requests from HTTP listener
 * [eva daemon cloudfront](eva_daemon_cloudfront.md)	 - Generate cloudfront requests from HTTP listener
 * [eva daemon invocations](eva_daemon_invocations.md)	 - Consume invocation messages from IOpipe library

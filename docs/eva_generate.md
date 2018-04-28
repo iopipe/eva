@@ -20,7 +20,7 @@ generate events for serverless functions.
 
 ### SEE ALSO
 
-* [eva](eva.md)	 - A brief description of your application
+* [eva](eva.md)	 - Event Ally, a cli for managing serverless events
 * [eva generate apigw](eva_generate_apigw.md)	 - Generate an API Gw event.
 * [eva generate cloudfront](eva_generate_cloudfront.md)	 - Generate a cloudfront event.
 
