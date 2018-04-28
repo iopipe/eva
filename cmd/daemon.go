@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/iopipe/eva/listener"
-	"github.com/iopipe/eva/templates"
+	"github.com/iopipe/eva/pkg/templates"
 	"github.com/spf13/cobra"
 )
 

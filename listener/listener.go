@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/iopipe/eva/pkg/templates"
 	"github.com/iopipe/eva/play"
-	"github.com/iopipe/eva/templates"
 )
 
 func HTTPHandlerFactory(requestHandler templates.RequestHandler, responseHandler templates.ResponseHandler, pipeExec string, pipeFile string, responseFile string) http.HandlerFunc {
