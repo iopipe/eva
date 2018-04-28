@@ -21,13 +21,13 @@ and proxy. It is designed to work with event-driven
 serverless systems.
 
 Eva can generate events:
-  `+"`"+`eva generate <event-type>`+"`"+`,
+  ` + "`" + `eva generate <event-type>` + "`" + `,
 Consume and dispatch events as a daemon:
-  `+"`"+`eva daemon <event-type>`+"`"+`,
+  ` + "`" + `eva daemon <event-type>` + "`" + `,
 Replay events and redispatch:
-  `+"`"+`eva play <event-id>`+"`"+`,
+  ` + "`" + `eva play <event-id>` + "`" + `,
 Store invocation data for serverless functions:
-  `+"`"+`eva invocations`+"`"+`,
+  ` + "`" + `eva invocations` + "`" + `,
 and is your serverless event ally brought to you with <3
 
 Read documentation online at https://iopipe.github.io/eva/`,
