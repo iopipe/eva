@@ -21,7 +21,7 @@ import (
 // generateCmd represents the generate command
 var generateCmd = &cobra.Command{
 	Use:   "generate",
-	Short: "generate events for serverless functions.",
+	Short: "Generate events for serverless functions.",
 }
 
 func init() {
