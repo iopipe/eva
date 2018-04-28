@@ -1,1 +1,6 @@
+tests.xml
+vet.report
 eva
+eva-darwin-amd64
+eva-linux-amd64
+eva-windows-amd64.exe
