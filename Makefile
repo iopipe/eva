@@ -31,8 +31,8 @@ link:
 	BUILD_DIR=${BUILD_DIR}; \
 	BUILD_DIR_LINK=${BUILD_DIR_LINK}; \
 	CURRENT_DIR=${CURRENT_DIR}; \
-  echo "$${CURRENT_DIR}"; \
-  echo "$${BUILD_DIR_LINK}"; \
+	echo "$${CURRENT_DIR}"; \
+	echo "$${BUILD_DIR_LINK}"; \
 	if [ "$${BUILD_DIR}" != "$${CURRENT_DIR}" ]; then \
 	    echo "Fixing symlinks for build"; \
 	    ln -s $${CURRENT_DIR} $${BUILD_DIR}; \
