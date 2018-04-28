@@ -1,10 +1,10 @@
 docs/eva_generate.md## eva generate
 
-generate events for serverless functions.
+Generate events for serverless functions.
 
 ### Synopsis
 
-generate events for serverless functions.
+Generate events for serverless functions.
 
 ### Options
 
