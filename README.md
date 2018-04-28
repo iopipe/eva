@@ -40,15 +40,15 @@ Available Commands:
       -q, --request string    Save request JSON into file.
       -s, --response string   Save response JSON into file.
   generate    generate events for serverless functions.
-    cloudfront
     apigw
+    cloudfront
+    requestbin
       -A, --auth string     Authorization header
       -d, --data string     Data for body, or '-' for stdin.
       -h, --help            help for apigw
       -H, --host string     HTTP(s) host for event data.
       -X, --method string   HTTP Method (default "GET")
       -p, --path string     HTTP(s) path or uri.
-  geturl      Return a URL to send HTTP(S) request to.
   help        Help about any command
   inspect     Inspect an event history record.
   invocations Invocations list
@@ -56,12 +56,7 @@ Available Commands:
   play        Play event specified by id
       -e, --exec string       Pipe events into specified shell command.
       -q, --request string    Save request JSON into file.
-Flags:
-      --config string   config file (default is $HOME/.eva.yaml)
-  -h, --help            help for eva
-  -t, --toggle          Help message for toggle
-
-Use "eva [command] --help" for more information about a command.
+  requestbin  Return a public URL to send HTTP(S) request to.
 ```
 
 Licensed under the Apache 2.0 license
