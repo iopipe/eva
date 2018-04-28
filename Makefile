@@ -21,10 +21,11 @@ LDFLAGS = -ldflags "-X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.
 # Build the project
 all: link clean goget test vet linux darwin windows docs
 
-build: link clean goget test vet docs
-	go build
+prepare: link clean goget test vet docs
 
-install: build
+build: prepare linux darwin windows
+
+install: prepare
 	go install
 
 link:
@@ -84,4 +85,4 @@ docs: linux
 	cd ${BUILD_DIR} ; \
 	./eva-linux-${GOARCH} docs export markdown ;
 
-.PHONY: link linux darwin windows test vet fmt clean goget docs
+.PHONY: link linux darwin windows test vet fmt clean goget docs prepare build
