@@ -15,19 +15,22 @@ import (
 var playCmd = &cobra.Command{
 	Use:   "play",
 	Short: "Play event specified by id",
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		eventIdStr := args[0]
-		eventId, err := strconv.Atoi(eventIdStr)
-		if err != nil {
-			log.Fatal(err)
-		}
+		for arg := range args {
+			eventIdStr := args[arg]
+			eventId, err := strconv.Atoi(eventIdStr)
+			if err != nil {
+				log.Fatal(err)
+			}
 
-		event := db.GetEvent(eventId)
-		encoded, err := json.MarshalIndent(event, "", " ")
-		if err != nil {
-			log.Fatal(err)
+			event := db.GetEvent(eventId)
+			encoded, err := json.MarshalIndent(event, "", " ")
+			if err != nil {
+				log.Fatal(err)
+			}
+			listener.HandleEvent(string(encoded), cmdFlagHTTPListenerPipeExec, cmdFlagHTTPListenerPipeFile, cmdFlagHTTPListenerResponseFile)
 		}
-		listener.HandleEvent(string(encoded), cmdFlagHTTPListenerPipeExec, cmdFlagHTTPListenerPipeFile, cmdFlagHTTPListenerResponseFile)
 
 		/* convert into HTTP...
 		   responseEvent := listener.HandleEvent(...)

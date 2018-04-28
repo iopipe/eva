@@ -22,12 +22,12 @@ func HandleInvocationEvent(request *http.Request) string {
 	}
 	var object map[string]interface{}
 	err = json.Unmarshal(body, &object)
-	if (err != nil) {
+	if err != nil {
 		os.Stderr.WriteString(err.Error())
 		os.Stderr.WriteString("\n")
 	}
 	db.PutInvocation(object)
-  return "{}"
+	return "{}"
 }
 
 func HandleCloudfrontEvent(request *http.Request) string {
@@ -79,7 +79,7 @@ func HandleCloudfrontEvent(request *http.Request) string {
 }
 
 func HandleInvocationResponse(response []byte, w http.ResponseWriter) {
-  /* NoOp */
+	/* NoOp */
 }
 
 func HandleApiGwResponse(response []byte, w http.ResponseWriter) {

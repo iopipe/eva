@@ -24,7 +24,7 @@ func HandleEvent(lambdaEvent string, pipeExec string, pipeFile string, responseF
 			log.Fatal("Error executing command.\nError: ", err)
 		}
 	}
-	if responseFile == "-" {
+	if responseFile == "-" || responseFile == "" {
 		fmt.Println(responseEvent)
 	}
 	return responseEvent
