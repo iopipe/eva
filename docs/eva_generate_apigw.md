@@ -13,12 +13,16 @@ eva generate apigw [flags]
 ### Options
 
 ```
-  -A, --auth string     Authorization header
-  -d, --data string     Data for body, or '-' for stdin.
-  -h, --help            help for apigw
-  -H, --host string     HTTP(s) host for event data.
-  -X, --method string   HTTP Method (default "GET")
-  -p, --path string     HTTP(s) path or uri.
+  -A, --auth string                 Authorization header
+  -c, --command string              Pipe event(s) into specified shell command
+  -d, --data string                 Data for body, or '-' for stdin.
+  -h, --help                        help for apigw
+  -H, --host string                 HTTP(s) host for event data.
+  -l, --lambda string               Process event(s) with specified AWS Lambda ARN
+  -e, --log-event string            Log process event(s) into file, or - for stdout
+  -E, --log-event-response string   Log response event(s) into file, or - for stdout
+  -X, --method string               HTTP Method (default "GET")
+  -p, --path string                 HTTP(s) path or uri.
 ```
 
 ### Options inherited from parent commands
