@@ -75,6 +75,18 @@ func GetEvents() map[int]struct{} {
 	return queryResult
 }
 
+func GetInvocation(docID int) map[string]interface{} {
+	myDB := Database()
+	defer myDB.Close()
+	invocations := myDB.Use("invocations")
+
+	readBack, err := invocations.Read(docID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return readBack
+}
+
 func GetInvocations() map[int]struct{} {
 	myDB := Database()
 	defer myDB.Close()

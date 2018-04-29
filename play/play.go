@@ -1,10 +1,15 @@
 package play
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
+
+	db "github.com/iopipe/eva/data"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -20,6 +25,9 @@ func PlayEvent(lambdaEvent string, pipeExec string, pipeFile string, responseFil
 	if pipeExec != "" {
 		cmd := exec.Command("bash", "-c", pipeExec)
 		cmd.Stdin = strings.NewReader(lambdaEvent)
+		/* Capture invocations from IOpipe libraries */
+		cmd.Env = append(os.Environ(),
+			"IOPIPE_DEBUG=true")
 		responseEvent, err = cmd.Output()
 		if err != nil {
 			log.Fatal("Error executing command.\nError: ", err)
@@ -37,6 +45,12 @@ func PlayEvent(lambdaEvent string, pipeExec string, pipeFile string, responseFil
 		}
 
 		responseEvent = result.Payload
+	}
+	if bytes.HasPrefix(responseEvent, []byte("IOPIPE-DEBUG:")) {
+		endIOpipe := bytes.Index(responseEvent, []byte("\n"))
+		var invocation map[string]interface{}
+		json.Unmarshal(responseEvent[13:endIOpipe], &invocation)
+		db.PutInvocation(invocation)
 	}
 	if responseFile == "-" || responseFile == "" {
 		fmt.Println(string(responseEvent))
