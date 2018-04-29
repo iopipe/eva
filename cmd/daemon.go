@@ -29,13 +29,14 @@ var cmdDaemonApiGw = &cobra.Command{
 	},
 }
 
-var cmdDaemonInvocation = &cobra.Command{
+/*** The invocation daemon cannot currently be consumed by IOpipe ***/
+/*var cmdDaemonInvocation = &cobra.Command{
 	Use:   "invocations",
 	Short: "Consume invocation messages from IOpipe library",
 	Run: func(cmd *cobra.Command, args []string) {
 		listen(templates.HandleInvocationEvent, templates.HandleInvocationResponse)
 	},
-}
+}*/
 
 func listen(requestTemplate templates.RequestHandler, responseTemplate templates.ResponseHandler) {
 	listener.Listen(requestTemplate, responseTemplate, cmdFlagDaemonAddress, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda)
@@ -48,5 +49,5 @@ func init() {
 	rootCmd.AddCommand(cmdDaemon)
 	cmdDaemon.AddCommand(cmdDaemonApiGw)
 	cmdDaemon.AddCommand(cmdDaemonCloudfront)
-	cmdDaemon.AddCommand(cmdDaemonInvocation)
+	//cmdDaemon.AddCommand(cmdDaemonInvocation)
 }
