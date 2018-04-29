@@ -29,7 +29,7 @@ var playCmd = &cobra.Command{
 			if err != nil {
 				log.Fatal(err)
 			}
-			play.PlayEvent(string(encoded), cmdFlagHTTPListenerPipeExec, cmdFlagHTTPListenerPipeFile, cmdFlagHTTPListenerResponseFile)
+			play.PlayEvent(string(encoded), cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda)
 		}
 
 		/* convert into HTTP...
@@ -42,8 +42,6 @@ var playCmd = &cobra.Command{
 }
 
 func init() {
+	SetPlayFlags(playCmd)
 	rootCmd.AddCommand(playCmd)
-	playCmd.Flags().StringVarP(&cmdFlagHTTPListenerPipeExec, "exec", "e", "", "Pipe events into specified shell command.")
-	playCmd.Flags().StringVarP(&cmdFlagHTTPListenerPipeFile, "request", "q", "", "Save request JSON into file.")
-	playCmd.Flags().StringVarP(&cmdFlagHTTPListenerPipeFile, "response", "s", "", "Save response JSON into file.")
 }

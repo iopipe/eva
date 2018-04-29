@@ -4,14 +4,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cmdFlagHTTPListenerAddress string
-var cmdFlagHTTPListenerPipeExec string
-var cmdFlagHTTPListenerPipeFile string
-var cmdFlagHTTPListenerResponseFile string
+var cmdFlagPlayDriver string
+var cmdFlagPlayExecCmd string
+var cmdFlagPlayExecLambda string
+var cmdFlagPlayPipeFile string
+var cmdFlagPlayResponseFile string
 
 func SetPlayFlags(command *cobra.Command) {
-	command.PersistentFlags().StringVarP(&cmdFlagHTTPListenerAddress, "addr", "a", ":8080", "HTTP(s) address to listen on.")
-	command.PersistentFlags().StringVarP(&cmdFlagHTTPListenerPipeExec, "exec", "e", "", "Pipe events into specified shell command.")
-	command.PersistentFlags().StringVarP(&cmdFlagHTTPListenerPipeFile, "request", "q", "", "Save request JSON into file.")
-	command.PersistentFlags().StringVarP(&cmdFlagHTTPListenerPipeFile, "response", "s", "", "Save response JSON into file.")
+	command.PersistentFlags().StringVarP(&cmdFlagPlayExecLambda, "lambda", "l", "", "Process event(s) with specified AWS Lambda ARN")
+	command.PersistentFlags().StringVarP(&cmdFlagPlayExecCmd, "command", "c", "", "Pipe event(s) into specified shell command")
+	command.PersistentFlags().StringVarP(&cmdFlagPlayPipeFile, "log-event", "e", "", "Log process event(s) into file, or - for stdout")
+	command.PersistentFlags().StringVarP(&cmdFlagPlayResponseFile, "log-event-response", "E", "", "Log response event(s) into file, or - for stdout")
 }

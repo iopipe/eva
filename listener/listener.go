@@ -8,16 +8,16 @@ import (
 	"github.com/iopipe/eva/play"
 )
 
-func HTTPHandlerFactory(requestHandler templates.RequestHandler, responseHandler templates.ResponseHandler, pipeExec string, pipeFile string, responseFile string) http.HandlerFunc {
+func HTTPHandlerFactory(requestHandler templates.RequestHandler, responseHandler templates.ResponseHandler, execCmd, pipeFile, responseFile, lambdaArn string) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		lambdaEvent := requestHandler(req)
-		responseEvent := play.PlayEvent(lambdaEvent, pipeExec, pipeFile, responseFile)
+		responseEvent := play.PlayEvent(lambdaEvent, execCmd, pipeFile, responseFile, lambdaArn)
 		responseHandler(responseEvent, w)
 	}
 }
 
-func Listen(requestHandler templates.RequestHandler, responseHandler templates.ResponseHandler, address string, pipeExec string, pipeFile string, responseFile string) {
-	handler := HTTPHandlerFactory(requestHandler, responseHandler, pipeExec, pipeFile, responseFile)
+func Listen(requestHandler templates.RequestHandler, responseHandler templates.ResponseHandler, address, execCmd, pipeFile, responseFile, lambdaArn string) {
+	handler := HTTPHandlerFactory(requestHandler, responseHandler, execCmd, pipeFile, responseFile, lambdaArn)
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe(address, nil))
 }
