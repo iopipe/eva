@@ -26,34 +26,30 @@ func Database() *db.DB {
 	return myDB
 }
 
-func PutInvocation(invocation map[string]interface{}) int {
+func PutRecordTable(record map[string]interface{}, tableName string) int {
 	myDB := Database()
 	defer myDB.Close()
-	invocations := myDB.Use("invocations")
+	invocations := myDB.Use(tableName)
 
-	docID, err := invocations.Insert(invocation)
+	docID, err := invocations.Insert(record)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return docID
+}
+
+func PutInvocation(invocation map[string]interface{}) int {
+	return PutRecordTable(invocation, "invocations")
 }
 
 func PutEvent(event map[string]interface{}) int {
-	myDB := Database()
-	defer myDB.Close()
-	events := myDB.Use("events")
-
-	docID, err := events.Insert(event)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return docID
+	return PutRecordTable(event, "events")
 }
 
-func GetEvent(docID int) map[string]interface{} {
+func GetIdTable(docID int, tableName string) map[string]interface{} {
 	myDB := Database()
 	defer myDB.Close()
-	events := myDB.Use("events")
+	events := myDB.Use(tableName)
 
 	readBack, err := events.Read(docID)
 	if err != nil {
@@ -62,40 +58,31 @@ func GetEvent(docID int) map[string]interface{} {
 	return readBack
 }
 
-func GetEvents() map[int]struct{} {
+func GetEvent(docId int) map[string]interface{} {
+	return GetIdTable(docId, "events")
+}
+
+func GetInvocation(docId int) map[string]interface{} {
+	return GetIdTable(docId, "invocations")
+}
+
+func GetAllTable(tableName string) map[int]struct{} {
 	myDB := Database()
 	defer myDB.Close()
-	events := myDB.Use("events")
+	table := myDB.Use(tableName)
 
 	query := "all"
 	queryResult := make(map[int]struct{})
-	if err := db.EvalQuery(query, events, &queryResult); err != nil {
+	if err := db.EvalQuery(query, table, &queryResult); err != nil {
 		log.Fatal(err)
 	}
 	return queryResult
-}
-
-func GetInvocation(docID int) map[string]interface{} {
-	myDB := Database()
-	defer myDB.Close()
-	invocations := myDB.Use("invocations")
-
-	readBack, err := invocations.Read(docID)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return readBack
 }
 
 func GetInvocations() map[int]struct{} {
-	myDB := Database()
-	defer myDB.Close()
-	invocations := myDB.Use("invocations")
+	return GetAllTable("invocations")
+}
 
-	query := "all"
-	queryResult := make(map[int]struct{})
-	if err := db.EvalQuery(query, invocations, &queryResult); err != nil {
-		log.Fatal(err)
-	}
-	return queryResult
+func GetEvents() map[int]struct{} {
+	return GetAllTable("events")
 }
