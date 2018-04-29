@@ -1,11 +1,12 @@
 package cmd
+
 import (
 	"github.com/iopipe/eva/listener"
 	"github.com/iopipe/eva/pkg/templates"
 	"github.com/spf13/cobra"
 )
 
-var cmdFlagHTTPListenerAddress string
+var cmdFlagDaemonAddress string
 
 var cmdDaemon = &cobra.Command{
 	Use:   "daemon",
@@ -37,12 +38,12 @@ var cmdDaemonInvocation = &cobra.Command{
 }
 
 func listen(requestTemplate templates.RequestHandler, responseTemplate templates.ResponseHandler) {
-	listener.Listen(requestTemplate, responseTemplate, cmdFlagHTTPListenerAddress, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda)
+	listener.Listen(requestTemplate, responseTemplate, cmdFlagDaemonAddress, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda)
 }
 
 func init() {
 	SetPlayFlags(cmdDaemon)
-	cmdDaemon.PersistentFlags().StringVarP(&cmdFlagHTTPListenerAddress, "addr", "a", ":8080", "HTTP(s) address to listen on.")
+	cmdDaemon.PersistentFlags().StringVarP(&cmdFlagDaemonAddress, "addr", "a", ":8080", "HTTP(s) address to listen on.")
 
 	rootCmd.AddCommand(cmdDaemon)
 	cmdDaemon.AddCommand(cmdDaemonApiGw)
