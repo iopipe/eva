@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/iopipe/eva/pkg/templates"
+	"github.com/iopipe/eva/play"
 	"github.com/spf13/cobra"
 )
 
@@ -13,11 +13,12 @@ var cloudfrontCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		request, _ := CliParseHTTP(cmd, args)
 		result := templates.HandleCloudfrontEvent(request)
-		fmt.Println(result)
+		play.PlayEvent(result, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda)
 	},
 }
 
 func init() {
 	SetHttpCobraFlags(cloudfrontCmd)
+	SetPlayFlags(cloudfrontCmd)
 	generateCmd.AddCommand(cloudfrontCmd)
 }
