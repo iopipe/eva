@@ -1,5 +1,4 @@
 package cmd
-
 import (
 	"github.com/iopipe/eva/listener"
 	"github.com/iopipe/eva/pkg/templates"
@@ -8,41 +7,45 @@ import (
 
 var cmdFlagHTTPListenerAddress string
 
-var cmdListenHTTP = &cobra.Command{
+var cmdDaemon = &cobra.Command{
 	Use:   "daemon",
 	Short: "Run HTTP daemon for listening to events.",
 }
 
-var cmdListenHTTPCloudfront = &cobra.Command{
+var cmdDaemonCloudfront = &cobra.Command{
 	Use:   "cloudfront",
 	Short: "Generate cloudfront requests from HTTP listener",
 	Run: func(cmd *cobra.Command, args []string) {
-		listener.Listen(templates.HandleCloudfrontEvent, templates.HandleCloudfrontResponse, cmdFlagHTTPListenerAddress, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda)
+		listen(templates.HandleCloudfrontEvent, templates.HandleCloudfrontResponse)
 	},
 }
 
-var cmdListenHTTPApiGw = &cobra.Command{
+var cmdDaemonApiGw = &cobra.Command{
 	Use:   "apigw",
 	Short: "Generate apigw requests from HTTP listener",
 	Run: func(cmd *cobra.Command, args []string) {
-		listener.Listen(templates.HandleApiGwEvent, templates.HandleApiGwResponse, cmdFlagHTTPListenerAddress, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda)
+		listen(templates.HandleApiGwEvent, templates.HandleApiGwResponse)
 	},
 }
 
-var cmdListenHTTPInvocation = &cobra.Command{
+var cmdDaemonInvocation = &cobra.Command{
 	Use:   "invocations",
 	Short: "Consume invocation messages from IOpipe library",
 	Run: func(cmd *cobra.Command, args []string) {
-		listener.Listen(templates.HandleInvocationEvent, templates.HandleInvocationResponse, cmdFlagHTTPListenerAddress, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda)
+		listen(templates.HandleInvocationEvent, templates.HandleInvocationResponse)
 	},
 }
 
-func init() {
-	SetPlayFlags(cmdListenHTTP)
-	cmdListenHTTP.PersistentFlags().StringVarP(&cmdFlagHTTPListenerAddress, "addr", "a", ":8080", "HTTP(s) address to listen on.")
+func listen(requestTemplate templates.RequestHandler, responseTemplate templates.ResponseHandler) {
+	listener.Listen(requestTemplate, responseTemplate, cmdFlagHTTPListenerAddress, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda)
+}
 
-	rootCmd.AddCommand(cmdListenHTTP)
-	cmdListenHTTP.AddCommand(cmdListenHTTPApiGw)
-	cmdListenHTTP.AddCommand(cmdListenHTTPCloudfront)
-	cmdListenHTTP.AddCommand(cmdListenHTTPInvocation)
+func init() {
+	SetPlayFlags(cmdDaemon)
+	cmdDaemon.PersistentFlags().StringVarP(&cmdFlagHTTPListenerAddress, "addr", "a", ":8080", "HTTP(s) address to listen on.")
+
+	rootCmd.AddCommand(cmdDaemon)
+	cmdDaemon.AddCommand(cmdDaemonApiGw)
+	cmdDaemon.AddCommand(cmdDaemonCloudfront)
+	cmdDaemon.AddCommand(cmdDaemonInvocation)
 }
