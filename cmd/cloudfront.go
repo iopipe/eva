@@ -13,7 +13,7 @@ var cloudfrontCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		request, _ := CliParseHTTP(cmd, args)
 		result := templates.HandleCloudfrontEvent(request)
-		play.PlayEvent(result, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda)
+		play.PlayEvent(result, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda, cmdFlagPlayQuiet)
 	},
 }
 

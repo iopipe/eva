@@ -18,6 +18,7 @@ eva play [flags]
   -l, --lambda string               Process event(s) with specified AWS Lambda ARN
   -e, --log-event string            Log process event(s) into file, or - for stdout
   -E, --log-event-response string   Log response event(s) into file, or - for stdout
+  -q, --quiet                       Do not print to stdout/stderr unless -e or -E is specified.
 ```
 
 ### Options inherited from parent commands

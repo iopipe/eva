@@ -29,7 +29,7 @@ var playCmd = &cobra.Command{
 			if err != nil {
 				log.Fatal(err)
 			}
-			play.PlayEvent(string(encoded), cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda)
+			play.PlayEvent(string(encoded), cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda, cmdFlagPlayQuiet)
 		}
 
 		/* convert into HTTP...

@@ -23,6 +23,7 @@ eva generate cloudfront [flags]
   -E, --log-event-response string   Log response event(s) into file, or - for stdout
   -X, --method string               HTTP Method (default "GET")
   -p, --path string                 HTTP(s) path or uri.
+  -q, --quiet                       Do not print to stdout/stderr unless -e or -E is specified.
 ```
 
 ### Options inherited from parent commands

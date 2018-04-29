@@ -39,7 +39,7 @@ var cmdDaemonApiGw = &cobra.Command{
 }*/
 
 func listen(requestTemplate templates.RequestHandler, responseTemplate templates.ResponseHandler) {
-	listener.Listen(requestTemplate, responseTemplate, cmdFlagDaemonAddress, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda)
+	listener.Listen(requestTemplate, responseTemplate, cmdFlagDaemonAddress, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda, cmdFlagPlayQuiet)
 }
 
 func init() {

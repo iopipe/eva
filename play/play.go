@@ -16,10 +16,10 @@ import (
 	"github.com/aws/aws-sdk-go/service/lambda"
 )
 
-func PlayEvent(lambdaEvent string, pipeExec string, pipeFile string, responseFile string, lambdaArn string) []byte {
+func PlayEvent(lambdaEvent string, pipeExec string, pipeFile string, responseFile string, lambdaArn string, playQuiet bool) []byte {
 	var responseEvent []byte = []byte("")
 	var err error
-	if pipeFile == "-" {
+	if pipeFile == "-" || (!playQuiet && pipeFile == "") {
 		fmt.Println(lambdaEvent)
 	}
 	if pipeExec != "" {
@@ -52,7 +52,7 @@ func PlayEvent(lambdaEvent string, pipeExec string, pipeFile string, responseFil
 		json.Unmarshal(responseEvent[13:endIOpipe], &invocation)
 		db.PutInvocation(invocation)
 	}
-	if responseFile == "-" || responseFile == "" {
+	if responseFile == "-" || (!playQuiet && responseFile == "") {
 		fmt.Println(string(responseEvent))
 	}
 	return responseEvent
