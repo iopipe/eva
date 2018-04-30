@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 
-	db "github.com/iopipe/eva/data"
 	"github.com/satori/go.uuid"
 )
 
@@ -19,7 +18,7 @@ func HandleApiGwResponse(response []byte, w http.ResponseWriter) {
 	w.WriteHeader(int(object["statusCode"].(float64)))
 }
 
-func HandleApiGwEvent(request *http.Request) string {
+func HandleApiGwEvent(request *http.Request) Event {
 	headersMap := make(map[string]interface{})
 
 	/* API Gateway doesn't handle duplicate headers...
@@ -71,11 +70,5 @@ func HandleApiGwEvent(request *http.Request) string {
 		"requestContext": contextMap,
 		"resource":       "UNKNOWN",
 	}
-	json, err := json.MarshalIndent(data, " ", " ")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	db.PutEvent(data)
-	return string(json)
+	return data
 }

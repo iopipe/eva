@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	db "github.com/iopipe/eva/data"
 	"github.com/iopipe/eva/pkg/templates"
 	"github.com/iopipe/eva/play"
 	"github.com/spf13/cobra"
@@ -12,8 +13,11 @@ var cloudfrontCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		request, _ := CliParseHTTP(cmd, args)
-		result := templates.HandleCloudfrontEvent(request)
-		play.PlayEvent(result, cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda, cmdFlagPlayQuiet)
+		event := templates.HandleCloudfrontEvent(request)
+		eventId := db.PutEvent(event)
+		invocation := playArgsToInvocation(cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda, cmdFlagPlayQuiet)
+		invocation.EventId = eventId
+		play.PlayEvent(invocation)
 	},
 }
 

@@ -21,7 +21,7 @@ func HandleInvocationEvent(request *http.Request) string {
 		os.Stderr.WriteString(err.Error())
 		os.Stderr.WriteString("\n")
 	}
-	db.PutInvocation(object)
+	db.PutStat(object)
 	return "{}"
 }
 

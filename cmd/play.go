@@ -1,14 +1,12 @@
 package cmd
 
 import (
-	"encoding/json"
 	"log"
 	"strconv"
 
-	"github.com/spf13/cobra"
-
 	db "github.com/iopipe/eva/data"
 	"github.com/iopipe/eva/play"
+	"github.com/spf13/cobra"
 )
 
 // playCmd represents the play command
@@ -24,12 +22,9 @@ var playCmd = &cobra.Command{
 				log.Fatal(err)
 			}
 
-			event := db.GetEvent(eventId)
-			encoded, err := json.MarshalIndent(event, "", " ")
-			if err != nil {
-				log.Fatal(err)
-			}
-			play.PlayEvent(string(encoded), cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda, cmdFlagPlayQuiet)
+			invocation := playArgsToInvocation(cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda, cmdFlagPlayQuiet)
+			invocation.EventId = db.EventId(eventId)
+			play.PlayEvent(invocation)
 		}
 
 		/* convert into HTTP...

@@ -1,21 +1,18 @@
 package templates
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"log"
 
 	"net/http"
 	"strings"
-
-	db "github.com/iopipe/eva/data"
 )
 
 func HandleCloudfrontResponse(request []byte, w http.ResponseWriter) {
 	w.WriteHeader(200)
 }
 
-func HandleCloudfrontEvent(request *http.Request) string {
+func HandleCloudfrontEvent(request *http.Request) Event {
 	headersMap := make(map[string]interface{})
 
 	for headerName, headerValues := range request.Header {
@@ -54,11 +51,5 @@ func HandleCloudfrontEvent(request *http.Request) string {
 			},
 		},
 	}
-	json, err := json.MarshalIndent(data, " ", " ")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	db.PutEvent(data)
-	return string(json)
+	return data
 }

@@ -1,11 +1,19 @@
 package data
 
 import (
-	"github.com/HouzuoGuo/tiedot/db"
-	"github.com/docker/docker/pkg/homedir"
+	"encoding/json"
 	"log"
 	"path/filepath"
+
+	"github.com/HouzuoGuo/tiedot/db"
+	"github.com/docker/docker/pkg/homedir"
+	"github.com/fatih/structs"
 )
+
+type EventId int
+type InvocationId int
+type StatId int
+type ResponseId int
 
 func Database() *db.DB {
 	dbPath := filepath.Join(homedir.Get(), ".eva", "data")
@@ -22,6 +30,7 @@ func Database() *db.DB {
 	myDB.Create("events")
 	myDB.Create("responses")
 	myDB.Create("invocations")
+	myDB.Create("stats")
 
 	return myDB
 }
@@ -38,12 +47,21 @@ func PutRecordTable(record map[string]interface{}, tableName string) int {
 	return docID
 }
 
-func PutInvocation(invocation map[string]interface{}) int {
-	return PutRecordTable(invocation, "invocations")
+func PutInvocation(invocation InvocationLog) InvocationId {
+	invocationMap := structs.Map(invocation)
+	return InvocationId(PutRecordTable(invocationMap, "invocations"))
 }
 
-func PutEvent(event map[string]interface{}) int {
-	return PutRecordTable(event, "events")
+func PutEvent(event map[string]interface{}) EventId {
+	return EventId(PutRecordTable(event, "events"))
+}
+
+func PutStat(event map[string]interface{}) StatId {
+	return StatId(PutRecordTable(event, "stats"))
+}
+
+func PutResponse(event map[string]interface{}) ResponseId {
+	return ResponseId(PutRecordTable(event, "responses"))
 }
 
 func GetIdTable(docID int, tableName string) map[string]interface{} {
@@ -58,12 +76,30 @@ func GetIdTable(docID int, tableName string) map[string]interface{} {
 	return readBack
 }
 
-func GetEvent(docId int) map[string]interface{} {
-	return GetIdTable(docId, "events")
+func GetEvent(docId EventId) map[string]interface{} {
+	return GetIdTable(int(docId), "events")
 }
 
-func GetInvocation(docId int) map[string]interface{} {
-	return GetIdTable(docId, "invocations")
+func GetEventJson(docId EventId) ([]byte, error) {
+	result := GetIdTable(int(docId), "events")
+	return json.MarshalIndent(result, "", " ")
+}
+
+func GetInvocation(docId InvocationId) *InvocationLog {
+	invMap := GetIdTable(int(docId), "invocations")
+	return &InvocationLog{
+		StatId:     StatId(invMap["StatId"].(float64)),
+		ResponseId: ResponseId(invMap["ResponseId"].(float64)),
+	}
+}
+
+func GetStat(docId StatId) map[string]interface{} {
+	return GetIdTable(int(docId), "stats")
+}
+
+func GetResponseJson(docId ResponseId) ([]byte, error) {
+	result := GetIdTable(int(docId), "responses")
+	return json.MarshalIndent(result, "", " ")
 }
 
 func GetAllTable(tableName string) map[int]struct{} {

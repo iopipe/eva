@@ -16,14 +16,24 @@ import (
 	"github.com/aws/aws-sdk-go/service/lambda"
 )
 
-func PlayEvent(lambdaEvent string, pipeExec string, pipeFile string, responseFile string, lambdaArn string, playQuiet bool) []byte {
-	var responseEvent []byte = []byte("")
+func PlayEvent(invocation *db.InvocationRequest) db.InvocationId {
+	result := &db.InvocationLog{
+		InvocationRequest: *invocation,
+	}
 	var err error
-	if pipeFile == "-" || (!playQuiet && pipeFile == "") {
+	var responseEvent []byte = []byte("")
+
+	lambdaEventBytes, err := db.GetEventJson(invocation.EventId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	lambdaEvent := string(lambdaEventBytes)
+
+	if invocation.PipeFile == "-" || (!invocation.PlayQuiet && invocation.PipeFile == "") {
 		fmt.Println(lambdaEvent)
 	}
-	if pipeExec != "" {
-		cmd := exec.Command("bash", "-c", pipeExec)
+	if invocation.PipeExec != "" {
+		cmd := exec.Command("bash", "-c", invocation.PipeExec)
 		cmd.Stdin = strings.NewReader(lambdaEvent)
 		/* Capture invocations from IOpipe libraries */
 		cmd.Env = append(os.Environ(),
@@ -33,27 +43,39 @@ func PlayEvent(lambdaEvent string, pipeExec string, pipeFile string, responseFil
 			log.Fatal("Error executing command.\nError: ", err)
 		}
 	}
-	if lambdaArn != "" {
+	if invocation.AwsLambdaArn != "" {
 		sess := session.Must(session.NewSessionWithOptions(session.Options{
 			SharedConfigState: session.SharedConfigEnable,
 		}))
 		client := lambda.New(sess, &aws.Config{})
-		result, err := client.Invoke(&lambda.InvokeInput{FunctionName: aws.String(lambdaArn), Payload: []byte(lambdaEvent)})
+		lambdaResult, err := client.Invoke(&lambda.InvokeInput{FunctionName: aws.String(invocation.AwsLambdaArn), Payload: []byte(lambdaEvent)})
 
 		if err != nil {
 			log.Fatal("Error calling lambda: ", err)
 		}
 
-		responseEvent = result.Payload
+		responseEvent = lambdaResult.Payload
 	}
 	if bytes.HasPrefix(responseEvent, []byte("IOPIPE-DEBUG:")) {
 		endIOpipe := bytes.Index(responseEvent, []byte("\n"))
-		var invocation map[string]interface{}
-		json.Unmarshal(responseEvent[13:endIOpipe], &invocation)
-		db.PutInvocation(invocation)
+		var statData map[string]interface{}
+		json.Unmarshal(responseEvent[13:endIOpipe], &statData)
+		result.StatId = db.PutStat(statData)
 	}
-	if responseFile == "-" || (!playQuiet && responseFile == "") {
+	if invocation.ResponseFile == "-" || (!invocation.PlayQuiet && invocation.ResponseFile == "") {
 		fmt.Println(string(responseEvent))
 	}
-	return responseEvent
+
+	var responseData map[string]interface{}
+	if bytes.HasPrefix(responseEvent, []byte("IOPIPE-DEBUG:")) {
+		endIOpipe := bytes.Index(responseEvent, []byte("\n"))
+		if err = json.Unmarshal(responseEvent[13:endIOpipe], &responseData); err == nil {
+			result.ResponseId = db.PutResponse(responseData)
+		}
+	} else {
+		if err = json.Unmarshal(responseEvent, &responseData); err == nil {
+			result.ResponseId = db.PutResponse(responseData)
+		}
+	}
+	return db.PutInvocation(*result)
 }

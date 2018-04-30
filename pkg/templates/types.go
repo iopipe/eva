@@ -4,5 +4,6 @@ import (
 	"net/http"
 )
 
-type RequestHandler func(request *http.Request) string
+type Event map[string]interface{}
+type RequestHandler func(request *http.Request) Event
 type ResponseHandler func(response []byte, w http.ResponseWriter)

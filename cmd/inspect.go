@@ -27,7 +27,7 @@ var inspectCmd = &cobra.Command{
 			if err != nil {
 				log.Fatal(err)
 			}
-			event := db.GetEvent(eventId)
+			event := db.GetEvent(db.EventId(eventId))
 
 			encoded, err := json.MarshalIndent(event, prefix, " ")
 			if err != nil {
