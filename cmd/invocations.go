@@ -29,35 +29,20 @@ var invocationsInspectCmd = &cobra.Command{
 	Short: "Inspect invocation",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		//var results []map[string]interface{}
-		var prefix = ""
-		if len(args) > 1 {
-			fmt.Println("[")
-			prefix = " "
-		}
+		var results []db.InvocationLog
 		for arg := range args {
 			invocationId, err := strconv.Atoi(args[arg])
 			if err != nil {
 				log.Fatal(err)
 			}
 			event := db.GetInvocation(db.InvocationId(invocationId))
-
-			encoded, err := json.MarshalIndent(event, prefix, " ")
-			if err != nil {
-				log.Fatal(err)
-			}
-			if len(args) > 1 {
-				fmt.Print(prefix)
-			}
-			fmt.Print(string(encoded))
-			if len(args)-1 != arg {
-				fmt.Print(",")
-			}
-			fmt.Print("\n")
+			results = append(results, *event)
 		}
-		if len(args) > 1 {
-			fmt.Println("]")
+		encoded, err := json.MarshalIndent(results, "", " ")
+		if err != nil {
+			log.Fatal(err)
 		}
+		fmt.Println(string(encoded))
 	},
 }
 
