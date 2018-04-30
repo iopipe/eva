@@ -57,25 +57,24 @@ func PlayEvent(invocation *db.InvocationRequest) db.InvocationId {
 		responseEvent = lambdaResult.Payload
 	}
 	if bytes.HasPrefix(responseEvent, []byte("IOPIPE-DEBUG:")) {
-		endIOpipe := bytes.Index(responseEvent, []byte("\n"))
+		endIOpipeData := bytes.Index(responseEvent, []byte("\n"))
 		var statData map[string]interface{}
-		json.Unmarshal(responseEvent[13:endIOpipe], &statData)
+		json.Unmarshal(responseEvent[13:endIOpipeData], &statData)
+
+		fmt.Println("Writing stats.")
 		result.StatId = db.PutStat(statData)
+
+		/* Skip IOpipe data for following operations */
+		endIOpipe := bytes.Index(responseEvent[endIOpipeData:], []byte("{"))
+		responseEvent = responseEvent[endIOpipe+endIOpipeData:]
 	}
 	if invocation.ResponseFile == "-" || (!invocation.PlayQuiet && invocation.ResponseFile == "") {
 		fmt.Println(string(responseEvent))
 	}
 
 	var responseData map[string]interface{}
-	if bytes.HasPrefix(responseEvent, []byte("IOPIPE-DEBUG:")) {
-		endIOpipe := bytes.Index(responseEvent, []byte("\n"))
-		if err = json.Unmarshal(responseEvent[13:endIOpipe], &responseData); err == nil {
-			result.ResponseId = db.PutResponse(responseData)
-		}
-	} else {
-		if err = json.Unmarshal(responseEvent, &responseData); err == nil {
-			result.ResponseId = db.PutResponse(responseData)
-		}
+	if err = json.Unmarshal(responseEvent, &responseData); err == nil {
+		result.ResponseId = db.PutResponse(responseData)
 	}
 	return db.PutInvocation(*result)
 }

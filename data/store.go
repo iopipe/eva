@@ -2,12 +2,14 @@ package data
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"path/filepath"
+	"strconv"
 
 	"github.com/HouzuoGuo/tiedot/db"
 	"github.com/docker/docker/pkg/homedir"
-	"github.com/fatih/structs"
+	//"github.com/fatih/structs"
 )
 
 type EventId int
@@ -48,8 +50,17 @@ func PutRecordTable(record map[string]interface{}, tableName string) int {
 }
 
 func PutInvocation(invocation InvocationLog) InvocationId {
-	invocationMap := structs.Map(invocation)
-	return InvocationId(PutRecordTable(invocationMap, "invocations"))
+	//invocationMap := structs.Map(invocation)
+	fmt.Println("PutInvStatID: ", invocation.StatId)
+	fmt.Println("PutInvResponseID: ", invocation.ResponseId)
+	invocationMap := map[string]interface{}{
+		"StatId":            string(invocation.StatId),
+		"ResponseId":        string(invocation.ResponseId),
+		"InvocationRequest": invocation.InvocationRequest,
+	}
+	id := InvocationId(PutRecordTable(invocationMap, "invocations"))
+	fmt.Println("InvocationId: ", id)
+	return id
 }
 
 func PutEvent(event map[string]interface{}) EventId {
@@ -87,9 +98,12 @@ func GetEventJson(docId EventId) ([]byte, error) {
 
 func GetInvocation(docId InvocationId) *InvocationLog {
 	invMap := GetIdTable(int(docId), "invocations")
+
+	statId, _ := strconv.Atoi(invMap["StatId"].(string))
+	responseId, _ := strconv.Atoi(invMap["ResponseId"].(string))
 	return &InvocationLog{
-		StatId:     StatId(invMap["StatId"].(float64)),
-		ResponseId: ResponseId(invMap["ResponseId"].(float64)),
+		StatId:     StatId(statId),         //invMap["StatId"].(int)),
+		ResponseId: ResponseId(responseId), //invMap["ResponseId"].(int)),
 	}
 }
 
@@ -121,4 +135,8 @@ func GetInvocations() map[int]struct{} {
 
 func GetEvents() map[int]struct{} {
 	return GetAllTable("events")
+}
+
+func GetStats() map[int]struct{} {
+	return GetAllTable("stats")
 }

@@ -46,7 +46,42 @@ var invocationsInspectCmd = &cobra.Command{
 	},
 }
 
+var invocationsStatsCmd = &cobra.Command{
+	Use:   "stats",
+	Short: "stats for invocation",
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			fmt.Println("Stats:")
+			queryResult := db.GetStats()
+
+			// Query result are document IDs
+			for id := range queryResult {
+				fmt.Println(id)
+			}
+			return
+		}
+
+		var results []map[string]interface{}
+		for arg := range args {
+			invocationId, err := strconv.Atoi(args[arg])
+			if err != nil {
+				log.Fatal(err)
+			}
+			event := *db.GetInvocation(db.InvocationId(invocationId))
+
+			stats := db.GetStat(event.StatId)
+			results = append(results, stats)
+		}
+		encoded, err := json.MarshalIndent(results, "", " ")
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(string(encoded))
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(invocationsCmd)
 	invocationsCmd.AddCommand(invocationsInspectCmd)
+	invocationsCmd.AddCommand(invocationsStatsCmd)
 }
