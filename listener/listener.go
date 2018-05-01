@@ -14,12 +14,12 @@ func HTTPHandlerFactory(requestHandler templates.RequestHandler, responseHandler
 		requestEvent := requestHandler(req)
 		eventId := db.PutEvent(requestEvent)
 		invocation.EventId = eventId
-		invocationId := play.PlayEvent(invocation)
-		result := db.GetInvocation(invocationId)
+		_, result := play.PlayEvent(invocation)
+		//result := db.GetInvocation(invocationId)
 		if responseData, err := db.GetResponseJson(result.ResponseId); err == nil {
 			responseHandler(responseData, w)
 		} else {
-			log.Fatal(err)
+			log.Println(err)
 		}
 	}
 }

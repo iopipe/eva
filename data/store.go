@@ -49,7 +49,7 @@ func PutRecordTable(record map[string]interface{}, tableName string) int {
 	return docID
 }
 
-func PutInvocation(invocation InvocationLog) InvocationId {
+func PutInvocation(invocation *InvocationLog) InvocationId {
 	//invocationMap := structs.Map(invocation)
 	fmt.Println("PutInvStatID: ", invocation.StatId)
 	fmt.Println("PutInvResponseID: ", invocation.ResponseId)

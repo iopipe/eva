@@ -16,7 +16,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/lambda"
 )
 
-func PlayEvent(invocation *db.InvocationRequest) db.InvocationId {
+func PlayEvent(invocation *db.InvocationRequest) (db.InvocationId, *db.InvocationLog) {
 	result := &db.InvocationLog{
 		InvocationRequest: *invocation,
 	}
@@ -76,5 +76,5 @@ func PlayEvent(invocation *db.InvocationRequest) db.InvocationId {
 	if err = json.Unmarshal(responseEvent, &responseData); err == nil {
 		result.ResponseId = db.PutResponse(responseData)
 	}
-	return db.PutInvocation(*result)
+	return db.PutInvocation(result), result
 }
