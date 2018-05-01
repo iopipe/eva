@@ -37,10 +37,10 @@ Read documentation online at https://iopipe.github.io/eva/
 
 * [eva daemon](eva_daemon.md)	 - Run HTTP daemon for listening to events.
 * [eva docs](eva_docs.md)	 - Help for eva
+* [eva events](eva_events.md)	 - List generated events
 * [eva generate](eva_generate.md)	 - Generate events for serverless functions.
 * [eva inspect](eva_inspect.md)	 - Inspect an event history record.
 * [eva invocations](eva_invocations.md)	 - Invocations list
-* [eva list](eva_list.md)	 - List generated events
 * [eva play](eva_play.md)	 - Play event specified by id
 * [eva stats](eva_stats.md)	 - List captured invocation stats
 

@@ -7,9 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// listCmd represents the list command
-var listCmd = &cobra.Command{
-	Use:   "list",
+// eventsCmd represents the events command
+var eventsCmd = &cobra.Command{
+	Use:   "events",
 	Short: "List generated events",
 	Run: func(cmd *cobra.Command, args []string) {
 		queryResult := db.GetEvents()
@@ -22,5 +22,5 @@ var listCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(listCmd)
+	rootCmd.AddCommand(eventsCmd)
 }
