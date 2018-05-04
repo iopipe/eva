@@ -1,13 +1,13 @@
-docs/eva_generate_apigw.md## eva generate apigw
+docs/eva_generate_cloudfront-response.md## eva generate cloudfront-response
 
-Generate an API Gw event.
+Generate a cloudfront request event.
 
 ### Synopsis
 
-Generate an API Gw event.
+Generate a cloudfront request event.
 
 ```
-eva generate apigw [flags]
+eva generate cloudfront-response [flags]
 ```
 
 ### Options
@@ -16,7 +16,7 @@ eva generate apigw [flags]
   -A, --auth string                 Authorization header
   -c, --command string              Pipe event(s) into specified shell command
   -d, --data string                 Data for body, or '-' for stdin.
-  -h, --help                        help for apigw
+  -h, --help                        help for cloudfront-response
   -H, --host string                 HTTP(s) host for event data.
   -l, --lambda string               Process event(s) with specified AWS Lambda ARN
   -e, --log-event string            Log process event(s) into file, or - for stdout
