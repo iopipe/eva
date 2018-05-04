@@ -9,36 +9,39 @@ import (
 	"strings"
 )
 
+/* Example input JSON - *direct response*
+{
+    body: 'content',
+    bodyEncoding: 'text' | 'base64',
+    headers: {
+	'header name in lowercase': [{
+	    key: 'header name in standard case',
+	    value: 'header value'
+	 }],
+	 ...
+    },
+    status: 'HTTP status code',
+    statusDescription: 'status description'
+}*/
 type CfResponse struct {
 	body              []byte
 	bodyEncoding      string
-	headers           map[string]map[string]string
+	headers           map[string][]map[string]string
 	status            int
 	statusDescription string
 }
 
 func HandleCloudfrontResponse(request []byte, w http.ResponseWriter) {
 	var err error
-	/* Example input JSON - *direct response*
-	{
-	    body: 'content',
-	    bodyEncoding: 'text' | 'base64',
-	    headers: {
-		'header name in lowercase': [{
-		    key: 'header name in standard case',
-		    value: 'header value'
-		 }],
-		 ...
-	    },
-	    status: 'HTTP status code',
-	    statusDescription: 'status description'
-	}*/
 	var event CfResponse
 	json.Unmarshal(request, &event)
 	w.WriteHeader(event.status)
 
-	for header := range event.headers {
-		w.Header().Add(event.headers[header]["key"], event.headers[header]["value"])
+	for headerHead := range event.headers {
+		for headerCopy := range event.headers[headerHead] {
+			headerMap := event.headers[headerHead][headerCopy]
+			w.Header().Add(headerMap["key"], headerMap["value"])
+		}
 	}
 
 	var body []byte
