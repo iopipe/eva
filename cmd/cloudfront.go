@@ -1,6 +1,11 @@
 package cmd
 
 import (
+	"encoding/json"
+	"log"
+	"net/http/httptest"
+	"os"
+
 	db "github.com/iopipe/eva/data"
 	"github.com/iopipe/eva/pkg/templates"
 	"github.com/iopipe/eva/play"
@@ -15,6 +20,17 @@ func mkCfEvent(handler templates.RequestHandler) func(cmd *cobra.Command, args [
 		invocation := playArgsToInvocation(cmdFlagPlayExecCmd, cmdFlagPlayPipeFile, cmdFlagPlayResponseFile, cmdFlagPlayExecLambda, cmdFlagPlayQuiet)
 		invocation.EventId = eventId
 		play.PlayEvent(invocation)
+
+		jsonEvent, err := json.Marshal(event)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		/* Emulate being an HTTP server sending a response... */
+		w := httptest.NewRecorder()
+		templates.HandleCloudfrontResponse(jsonEvent, w)
+		result := w.Result()
+		result.Write(os.Stdout)
 	}
 }
 

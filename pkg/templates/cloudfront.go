@@ -1,15 +1,53 @@
 package templates
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"io/ioutil"
 	"log"
-
 	"net/http"
 	"strings"
 )
 
+type CfResponse struct {
+	body              []byte
+	bodyEncoding      string
+	headers           map[string]map[string]string
+	status            int
+	statusDescription string
+}
+
 func HandleCloudfrontResponse(request []byte, w http.ResponseWriter) {
-	w.WriteHeader(200)
+	var err error
+	/* Example input JSON - *direct response*
+	{
+	    body: 'content',
+	    bodyEncoding: 'text' | 'base64',
+	    headers: {
+		'header name in lowercase': [{
+		    key: 'header name in standard case',
+		    value: 'header value'
+		 }],
+		 ...
+	    },
+	    status: 'HTTP status code',
+	    statusDescription: 'status description'
+	}*/
+	var event CfResponse
+	json.Unmarshal(request, &event)
+	w.WriteHeader(event.status)
+
+	for header := range event.headers {
+		w.Header().Add(event.headers[header]["key"], event.headers[header]["value"])
+	}
+
+	var body []byte
+	if event.bodyEncoding == "base64" {
+		if _, err = base64.StdEncoding.Decode(body, event.body); err != nil {
+			log.Fatal(err)
+		}
+	}
+	w.Write(body)
 }
 
 func HandleCloudfrontEvent(request *http.Request) Event {
